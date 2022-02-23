@@ -2,7 +2,9 @@ const Koa = require('koa');
 // koa-bodyparser 需要另外安装
 const bodyParser = require('koa-bodyparser');
 
-const userRouter = require('../router/user.router')
+const userRouter = require('../router/user.router');
+const errorHandler = require('./error-handler');
+
 
 const app = new Koa();
 
@@ -11,5 +13,7 @@ app.use(bodyParser());
 app.use(userRouter.routes());
 app.use(userRouter.allowedMethods());
 
+// 监听事件
+app.on('error', errorHandler);
 
 module.exports = app;

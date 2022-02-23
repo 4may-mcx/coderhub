@@ -3,7 +3,11 @@ const userRouter = new Router({prefix:'/users'});
 const {
     create
 } = require('../controller/user.conroller');
+const {
+    verifyUser
+} = require('../middleware/user.middleware');
 
-userRouter.post('/', create);
+
+userRouter.post('/', verifyUser, create);
 
 module.exports = userRouter;
