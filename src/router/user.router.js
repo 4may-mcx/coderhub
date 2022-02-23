@@ -4,10 +4,11 @@ const {
     create
 } = require('../controller/user.conroller');
 const {
-    verifyUser
+    verifyUser,
+    handlePassword
 } = require('../middleware/user.middleware');
 
 
-userRouter.post('/', verifyUser, create);
+userRouter.post('/', verifyUser, handlePassword, create);
 
 module.exports = userRouter;
