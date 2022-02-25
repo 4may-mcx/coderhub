@@ -14,6 +14,9 @@ class UserService{
         const result = await connection.execute(statement, [name]);
         return result[0];
     }
+    async getUserByList(offset, size){
+        console.log(offset, size);
+    }
 }
 
 module.exports = new UserService();
