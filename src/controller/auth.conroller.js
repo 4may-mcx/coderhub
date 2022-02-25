@@ -1,7 +1,17 @@
-class AuthController{
-  async login(ctx, next){
-    const {name} = ctx.request.body;
-    ctx.body = `登陆成功，欢迎${name}回来~`
+const jwt = require('jsonwebtoken');
+const { PRIVATE_KEY } = require('../app/config');
+
+class AuthController {
+  async login(ctx, next) {
+    const { id, name } = ctx.user;
+    
+    // 颁发 token
+    const token = jwt.sign({ id, name }, PRIVATE_KEY, {
+      expiresIn: 60 * 60 * 24,
+      algorithm: 'RS256'
+    });
+
+    ctx.body = { id, name, token }
   }
 }
 
