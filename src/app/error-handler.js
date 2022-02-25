@@ -2,7 +2,7 @@ const errorTypes = require('../constants/error-types')
 
 const errorHandler = (error, ctx) => {
   let status, message;
-  // console.log(error.message);
+  console.log('当前错误: ', error.message);
 
   switch (error.message) {
     case errorTypes.NAME_OR_PASSWORD_IS_REQUIRED:

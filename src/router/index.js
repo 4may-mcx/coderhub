@@ -6,7 +6,7 @@ const useRoutes = function () {
     const router = require(`./${file}`);
     // 相当于 app.use()
     this.use(router.routes());
-    this.use(router.allowedMethods);
+    this.use(router.allowedMethods());
   })
 }
 

@@ -36,7 +36,8 @@ const verifyLogin = async (ctx, next) => {
 const verifyAuth = async (ctx, next) => {
 
   // 1. 获取token
-  const authorization = ctx.headers.authorization;
+  // 如果 authorization 不存在，则随便赋一个值进入错误捕获
+  const authorization = ctx.headers.authorization || '';
   const token = authorization.replace('Bearer ', '');
 
   // 2. 验证token(id/name/iat/exp)
@@ -44,11 +45,12 @@ const verifyAuth = async (ctx, next) => {
     const result = jwt.verify(token, PUBLIC_KEY, {
       algorithms: ['RS256']
     });
+    // console.log(result); //{ id: 10, name: 'niannian', iat: 1645774547, exp: 1645860947 }
     ctx.user = result;
     await next();
   } catch (err) {
     const error = new Error(errorTypes.UNAUTHORIZATION);
-    ctx.emit.app('error', error, ctx);
+    ctx.app.emit('error', error, ctx);
   }
 }
 

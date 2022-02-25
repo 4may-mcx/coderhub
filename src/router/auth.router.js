@@ -5,7 +5,7 @@ const authRouter = new Router();
 const {
   login,
   success
-} = require('../controller/auth.conroller');
+} = require('../controller/auth.controller');
 const {
   verifyLogin,
   verifyAuth
