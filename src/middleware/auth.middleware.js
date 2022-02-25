@@ -1,6 +1,8 @@
 const errorTypes = require('../constants/error-types');
 const service = require('../service/user.service');
 const md5password = require('../utils/password-handle');
+const jwt = require('jsonwebtoken');
+const { PUBLIC_KEY } = require('../app/config')
 
 const verifyLogin = async (ctx, next) => {
   // 1. 获取用户名和密码
@@ -31,6 +33,26 @@ const verifyLogin = async (ctx, next) => {
   await next();
 }
 
+const verifyAuth = async (ctx, next) => {
+
+  // 1. 获取token
+  const authorization = ctx.headers.authorization;
+  const token = authorization.replace('Bearer ', '');
+
+  // 2. 验证token(id/name/iat/exp)
+  try {
+    const result = jwt.verify(token, PUBLIC_KEY, {
+      algorithms: ['RS256']
+    });
+    ctx.user = result;
+    await next();
+  } catch (err) {
+    const error = new Error(errorTypes.UNAUTHORIZATION);
+    ctx.emit.app('error', error, ctx);
+  }
+}
+
 module.exports = {
-  verifyLogin
+  verifyLogin,
+  verifyAuth
 }

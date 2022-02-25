@@ -4,7 +4,7 @@ const { PRIVATE_KEY } = require('../app/config');
 class AuthController {
   async login(ctx, next) {
     const { id, name } = ctx.user;
-    
+
     // 颁发 token
     const token = jwt.sign({ id, name }, PRIVATE_KEY, {
       expiresIn: 60 * 60 * 24,
@@ -12,6 +12,10 @@ class AuthController {
     });
 
     ctx.body = { id, name, token }
+  }
+
+  async success(ctx, next) {
+    ctx.body = "授权成功~";
   }
 }
 
