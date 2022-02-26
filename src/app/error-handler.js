@@ -25,6 +25,10 @@ const errorHandler = (error, ctx) => {
       status = 401;
       message = "未知token";
       break;
+    case errorTypes.UNPERMISSION:
+      status = 401;
+      message = "您没有修改的权限";
+      break;
 
     default:
       status = 404;

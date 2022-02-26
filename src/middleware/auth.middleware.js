@@ -1,5 +1,6 @@
 const errorTypes = require('../constants/error-types');
-const service = require('../service/user.service');
+const userService = require('../service/user.service');
+const authService = require('../service/auth.service')
 const md5password = require('../utils/password-handle');
 const jwt = require('jsonwebtoken');
 const { PUBLIC_KEY } = require('../app/config')
@@ -15,7 +16,7 @@ const verifyLogin = async (ctx, next) => {
   }
 
   // 3. 判断用户是否存在
-  const result = await service.getUserByName(name);
+  const result = await userService.getUserByName(name);
   const user = result[0];
   // console.log(user);
   if (!user) {
@@ -34,7 +35,7 @@ const verifyLogin = async (ctx, next) => {
 }
 
 const verifyAuth = async (ctx, next) => {
-
+  console.log("令牌验证middleware工作中.....");
   // 1. 获取token
   // 如果 authorization 不存在，则随便赋一个值进入错误捕获
   const authorization = ctx.headers.authorization || '';
@@ -54,7 +55,26 @@ const verifyAuth = async (ctx, next) => {
   }
 }
 
+const verifyPermission = async (ctx, next) => {
+  console.log("权限验证middleware工作中.....");
+
+  // 1. 获取参数
+  const { momentId } = ctx.params;
+  const { id } = ctx.user;
+  try {
+    const isPermission = await authService.checkMoment(momentId, id);
+    // 如果 isPermission === false (没有权限) ,就抛出错误
+    if (!isPermission) throw new Error();
+    await next()
+  } catch (err) {
+    const error = new Error(errorTypes.UNPERMISSION);
+    return ctx.app.emit('error', error, ctx);
+  }
+
+}
+
 module.exports = {
   verifyLogin,
-  verifyAuth
+  verifyAuth,
+  verifyPermission
 }

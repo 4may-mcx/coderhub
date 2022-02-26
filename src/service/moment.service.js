@@ -23,12 +23,19 @@ class MomentServe {
     const [result] = await connection.execute(statement, [id]);
     return result[0];
   }
+
   async getUserByList(offset, size) {
     const statement = `
       ${sqlFragment}
       LIMIT ?, ?;
     `;
     const [result] = await connection.execute(statement, [offset, size]);
+    return result;
+  }
+
+  async update(content, momentId) {
+    const statement = `UPDATE moment SET content = ? WHERE id = ?;`;
+    const [result] = await connection.execute(statement, [content, momentId]);
     return result;
   }
 }
