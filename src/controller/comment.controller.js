@@ -16,6 +16,26 @@ class CommentController {
     const result = await commentService.reply(id, content, momentId, commentId);
     ctx.body = result;
   }
+  async update(ctx, next) {
+    const { commentId } = ctx.params;
+    const { content } = ctx.request.body;
+    // console.log(commentId, content);
+    const result = await commentService.update(content, commentId);
+
+    ctx.body = {
+      state: '评论修改成功',
+      updated: content,
+      result: result
+    };
+  }
+  async remove(ctx, next) {
+    const { commentId } = ctx.params;
+    const result = await commentService.remove(commentId);
+    ctx.body = {
+      state: '删除成功',
+      result: result
+    }
+  }
 }
 
 module.exports = new CommentController();

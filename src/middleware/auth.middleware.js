@@ -59,10 +59,13 @@ const verifyPermission = async (ctx, next) => {
   console.log("权限验证middleware工作中.....");
 
   // 1. 获取参数
-  const { momentId } = ctx.params;
+  const [resourceKey] = Object.keys(ctx.params);
+  const tableName = resourceKey.replace('Id', '');
+  const resourceId = ctx.params[resourceKey];
+  // console.log(tableName, resourceId);
   const { id } = ctx.user;
   try {
-    const isPermission = await authService.checkMoment(momentId, id);
+    const isPermission = await authService.checkMoment(tableName, resourceId, id);
     // 如果 isPermission === false (没有权限) ,就抛出错误
     if (!isPermission) throw new Error();
     await next()
