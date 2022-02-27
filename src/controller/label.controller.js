@@ -6,6 +6,12 @@ class LabelController {
     const result = await labelService.create(name);
     ctx.body = result;
   }
+
+  async list(ctx, next) {
+    const { offset, size } = ctx.query;
+    const result = await labelService.getLabels(offset, size);
+    ctx.body = result;
+  }
 }
 
 module.exports = new LabelController();
