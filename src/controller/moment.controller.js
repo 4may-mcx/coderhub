@@ -1,5 +1,9 @@
+const fs = require('fs');
 const service = require('../service/moment.service');
 const labelService = require('../service/label.service');
+const fileService = require('../service/file.service');
+const { PICTURE_PATH } = require('../constants/file-path')
+
 class MomentController {
   async create(ctx, next) {
     ctx.body = '发表动态成功~';
@@ -61,6 +65,14 @@ class MomentController {
       }
     }
     ctx.body = '标签添加成功';
+  }
+
+  async fileInfo(ctx, next) {
+    const { filename } = ctx.params;
+    const fileInfo = await fileService.getFileByFilename(filename);
+    console.log(fileInfo);
+    ctx.response.set('content-type', fileInfo.mimetype)
+    ctx.body = fs.createReadStream(`${PICTURE_PATH}/${filename}`)
   }
 }
 
